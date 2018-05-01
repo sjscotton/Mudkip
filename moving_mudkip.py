@@ -31,7 +31,7 @@ def run_game():
 
     while True:
 
-        gf.check_for_berries(ai_settings, screen, berries)
+        gf.check_for_berries(ai_settings, screen, berries, animated_berries)
         gf.check_mudkip_berry_collisions(ai_settings, screen, mudkip, berries, animated_berries)
         gf.check_events(ai_settings, screen, rain, mudkip)
         mudkip.update()

@@ -7,17 +7,24 @@ from pygame.locals import *
 
 def update_screen(ai_settings, screen, mudkip, berries, rain, animated_berries):
     screen.fill(ai_settings.bg_color)
-    # for mudkip in mudkip.sprites():
+
     mudkip.blitme()
     for berry in berries.sprites():
         berry.blitme()
     for raindrop in rain:
         raindrop.update()
         raindrop.blitme()
+        update_animated_berries(ai_settings, screen, animated_berries)
+    pygame.display.flip()
+
+def update_animated_berries(ai_settings, screen, animated_berries):
+
     for animated_berry in animated_berries.sprites():
+        if animated_berry.steps > 160 :
+            animated_berries.remove(animated_berry)
+        animated_berry.update()
         animated_berry.blitme()
 
-    pygame.display.flip()
 
 def check_events(ai_settings, screen, rain, mudkip):
     for event in pygame.event.get():
@@ -60,8 +67,8 @@ def add_berry(ai_settings, screen, berries):
     berry = Berry(ai_settings, screen)
     berries.add(berry)
 
-def check_for_berries(ai_settings, screen, berries):
-    if len(berries) == 0:
+def check_for_berries(ai_settings, screen, berries, animated_berries):
+    if len(berries) == 0 and len(animated_berries) == 0:
         add_berry(ai_settings, screen, berries)
 
 def check_mudkip_berry_collisions(ai_settings, screen, mudkip, berries, animated_berries):

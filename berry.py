@@ -3,6 +3,7 @@ import pygame
 from pygame.sprite import Sprite
 import random
 from settings import Settings
+import math
 
 class Berry(Sprite):
     """one berry appears in a set amount of time, if mudkip dosent eat it in a set amount of time, more pokemon appear who want to eat it too,/ their speed increases"""
@@ -21,14 +22,6 @@ class Berry(Sprite):
     def blitme(self):
         self.screen.blit(self.image, self.rect)
 
-    # def clone(self):
-    #     print('1')
-    #     berry_clone = AnimatedBerry(self.ai_settings, self.screen)
-    #     print('2')
-    #     berry_clone.rect.centerx = self.rect.centerx
-    #     berry_clone.rect.centery = self.rect.centery
-    #     berry_clone.initial_y_pos = self.rect.centery
-    #     berry_clone.blitme()
 
 class AnimatedBerry(Sprite):
 
@@ -45,10 +38,18 @@ class AnimatedBerry(Sprite):
         self.rect.centery = -50
         self.initial_y_pos = 0
 
-        self.iteration = 0
+        self.iteration = -.60
+        self.steps = 0
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
 
 
-    # def animate(self):
+    def update(self):
+        # self.rect.centery -= ((math.cos(self.iteration)*2.2))/15
+        # self.rect.centery += (-1 * math.sin(self.iteration))/5000000000
+        # self.rect.centery += (4*(self.iteration**2)-(self.iteration**3)) / 10
+        # self.rect.centery -= (4 * (self.iteration ** 2) - (self.iteration ** 3)) / 25
+        self.rect.centery = self.initial_y_pos - (((5.5 * (self.iteration ** 2) - (self.iteration ** 3))/2) -1)
+        self.iteration += .035
+        self.steps += 1
