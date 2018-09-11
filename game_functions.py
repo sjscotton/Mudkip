@@ -5,24 +5,28 @@ from berry import AnimatedBerry
 from rain_drops import RainDrop
 from pygame.locals import *
 
-def update_screen(ai_settings, screen, mudkip, berries, rain, animated_berries):
+
+def update_screen(ai_settings, screen, mudkip, berries, rain, animated_berries, sb):
     screen.fill(ai_settings.bg_color)
 
     mudkip.blitme()
     for berry in berries.sprites():
+        if not berry.at_final_position:
+            berry.animate_in()
         berry.blitme()
     for raindrop in rain:
         raindrop.update()
         raindrop.blitme()
         update_animated_berries(ai_settings, screen, animated_berries)
+    sb.show_score()
     pygame.display.flip()
 
 def update_animated_berries(ai_settings, screen, animated_berries):
 
     for animated_berry in animated_berries.sprites():
-        if animated_berry.steps > 160 :
+        if animated_berry.steps > 200 :
             animated_berries.remove(animated_berry)
-        animated_berry.update()
+        animated_berry.update(ai_settings)
         animated_berry.blitme()
 
 
@@ -71,28 +75,25 @@ def check_for_berries(ai_settings, screen, berries, animated_berries):
     if len(berries) == 0 and len(animated_berries) == 0:
         add_berry(ai_settings, screen, berries)
 
-def check_mudkip_berry_collisions(ai_settings, screen, mudkip, berries, animated_berries):
-    #collisions = pygame.sprite.spritecollide(mudkip, berries, True)
+def check_mudkip_berry_collisions(ai_settings, screen, mudkip, berries, animated_berries, sb):
+
     """top one also works, but dosent give me freedom to act apon the collision"""
-    # if collisions:
-    # pygame.sprite.spritecollide(mudkip, berries, True)
 
     for berry in berries:
         if pygame.sprite.collide_rect(berry, mudkip):
             ai_settings.sound_a.play()
-
-            berry_clone = clone(ai_settings, screen, berry)
+            berry_clone = AnimatedBerry(ai_settings, screen, berry)
+            berry_clone.blitme()
             animated_berries.add(berry_clone)
-
+            sb.score += berry.berry_score
+            sb.prep_score()
             berries.remove(berry)
-def clone(ai_settings, screen, berry):
 
-    berry_clone = AnimatedBerry(ai_settings, screen, berry)
-    berry_clone.rect.centerx = berry.rect.centerx
-    berry_clone.rect.centery = berry.rect.centery
-    berry_clone.initial_y_pos = berry.rect.centery
-    berry_clone.blitme()
-    return berry_clone
+def check_mudkip_raindrop_collisions(ai_settings, screen, mudkip, rain):
+    for raindrop in rain:
+        if pygame.sprite.collide_rect(raindrop, mudkip):
+            ai_settings.sound_b.play()
+            rain.remove(raindrop)
 
 
 def add_rain(ai_settings, screen, rain):
