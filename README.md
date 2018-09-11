@@ -7,8 +7,8 @@ To start the game run the following in your command line in the Midkip directory
 
 python moving_mudkip.py
 
------
 
-###  Gameplay
+
+##  Gameplay
 
 Use the arrow keys to move Mudkip left, right up and down. Collect 4 types of berries of different rarities and point values. Although there are no penalties so far, avoid the raindrops to keep Mudkip dry.
